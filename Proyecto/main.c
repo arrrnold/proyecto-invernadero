@@ -46,7 +46,7 @@ void main(void)
 			else
 			{
 				P1OUT &=~ BIT0;	// apagar led testigo
-				P1OUT |= BIT4; // apagar la bomba
+				P1OUT &=~ BIT4; // apagar la bomba
 			}
 			_BIS_SR(GIE); // habilitar interrupciones
 		}
