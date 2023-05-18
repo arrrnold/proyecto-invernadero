@@ -27,7 +27,7 @@ void main(void)
 	/* para el ADC */
 	ADC12CTL0 |= ADC12ON;	// encendemos el ADC
 	ADC12CTL1 |= ADC12SHP;	// conectamos el reloj
-	ADC12CTL0 |= ADC12ENC;	// activar el ADC para conversión
+	ADC12CTL0 |= ADC12ENC;	// activar el ADC para conversiÃ³n
 	P6SEL |= BIT0; // habilita el pin donde va a entrar el voltaje
 
 	/*sensar humedad y controlar iluminacion*/
@@ -38,15 +38,15 @@ void main(void)
 		if (ADC12MEM0 > 500)
 		{
 			humedad = ADC12MEM0;
-			if (humedad < 1750) // 1750 = 70% de humedad
-			{
-				P1OUT |= BIT0;	// encender led testigo
-				P1OUT |= BIT4; // encender la bomba
-			}
-			else
+			if (humedad < 1500) // 1500 = 60% de humedad
 			{
 				P1OUT &=~ BIT0;	// apagar led testigo
 				P1OUT &=~ BIT4; // apagar la bomba
+			}
+			else
+			{
+				P1OUT |= BIT0;	// encender led testigo
+				P1OUT |= BIT4; // encender la bomba
 			}
 			_BIS_SR(GIE); // habilitar interrupciones
 		}
