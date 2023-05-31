@@ -9,7 +9,8 @@ void main(void)
 
 	contador = 0;
 
-	P1DIR |= BIT4 + BIT5; // P1.4 y 1.5 como salidas
+	P1DIR |= BIT4; // P1.4 y 1.5 como salidas
+	P1DIR |= BIT5; // P1.4 y 1.5 como salidas
 	P1OUT &=~ BIT4; // bomba desactivada
 	P1OUT |= BIT5; // luz activada
 	P6DIR &=~ BIT0; // P6.0 como entrada (para el adc)
@@ -34,22 +35,18 @@ void main(void)
 	while(1)
 	{
 		ADC12CTL0 |= ADC12SC; // inicial el muestreo
-
-		if (ADC12MEM0 > 500)
+		humedad = ADC12MEM0;
+		if (humedad < 1500) // 1500 = 60% de humedad
 		{
-			humedad = ADC12MEM0;
-			if (humedad < 1500) // 1500 = 60% de humedad
-			{
-				P1OUT &=~ BIT0;	// apagar led testigo
-				P1OUT &=~ BIT4; // apagar la bomba
-			}
-			else
-			{
-				P1OUT |= BIT0;	// encender led testigo
-				P1OUT |= BIT4; // encender la bomba
-			}
-			_BIS_SR(GIE); // habilitar interrupciones
+			P1OUT &=~ BIT0;	// apagar led testigo
+			P1OUT &=~ BIT4; // apagar la bomba
 		}
+		else
+		{
+			P1OUT |= BIT0;	// encender led testigo
+			P1OUT |= BIT4; // encender la bomba
+		}
+		_BIS_SR(GIE); // habilitar interrupciones
 	}
 }
 
@@ -59,7 +56,7 @@ __interrupt void ILUMINAR (void)
 	contador++;
 
 	/* alternar la luz */
-	if(contador > 10800) // 10800*4s = 12h
+	if(contador > 5400) // 5400*4s*2 = 12h
 	{
 		contador = 0;
 		P4OUT ^= BIT7; // encender led testigo
